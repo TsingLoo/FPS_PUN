@@ -20,6 +20,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
     [SerializeField] GameObject cameraHolder;
 
     [SerializeField] float mouseSensitivity;
+    [SerializeField] float weaponSwayAmount;
     [SerializeField] float sprintSpeed;
     [SerializeField] float walkSpeed;
     [SerializeField] float jumpForce;
@@ -81,45 +82,18 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
 
         Jump();
 
-        //Switch weapon by keyboard 
-        for (int i = 0; i < items.Length; i++)
-        {
-            if (Input.GetKeyDown((i+1).ToString()))
-            {
-                EquipItem(i);
-                break;
-            }
-        }
-         
+        SwitchGun();
 
-        //Switch weapon by scrollwheel 
-        if (Input.GetAxisRaw("Mouse ScrollWheel") > 0f)
-        {
-            if (itemIndex >= items.Length - 1)
-            {
-                EquipItem(0);
-            }
-            else
-            {
-                EquipItem(itemIndex + 1);
-            }
+        DetermineAim();
 
-        }
-        else if (Input.GetAxisRaw("Mouse ScrollWheel") < 0f)
-        {
-            if (itemIndex <= 0)
-            {
-                EquipItem(items.Length -1);
-            }
-            else
-            {
-                EquipItem(itemIndex - 1);
-            }
-        }
-
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButton(0))
         {
             items[itemIndex].Use();
+        }
+
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            ((Gun)items[itemIndex]).Reload();
         }
 
         if (transform.position.y < -10)
@@ -131,13 +105,19 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
 
     void Look() 
     {
+        Vector2 mouseAxis = new Vector2(Input.GetAxisRaw("Mouse X"),Input.GetAxisRaw("Mouse Y")) ;
+
         //控制左右旋转视角
-        transform.Rotate(Vector3.up * Input.GetAxisRaw("Mouse X") * mouseSensitivity);
+        transform.Rotate(Vector3.up * mouseAxis.x * mouseSensitivity);
+
+        if (!((Gun)items[itemIndex]).gameObject.TryGetComponent<GunController>(out GunController gunController)) return;
+
+        ((Gun)items[itemIndex]).gameObject.GetComponent<GunController>()
+            .GunPrefab.transform.localPosition += (Vector3)mouseAxis*weaponSwayAmount/1000;
 
         //控制上下旋转视角
-        verticalLookRotation += Input.GetAxisRaw("Mouse Y") * mouseSensitivity;
+        verticalLookRotation += mouseAxis.y * mouseSensitivity;
         verticalLookRotation = Mathf.Clamp(verticalLookRotation, -90f, 90f);
-
         cameraHolder.transform.localEulerAngles = Vector3.left * verticalLookRotation;
     }
 
@@ -157,6 +137,49 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
         }
     }
 
+    void SwitchGun() 
+    {
+        //Switch weapon by keyboard 
+        for (int i = 0; i < items.Length; i++)
+        {
+            if (Input.GetKeyDown((i + 1).ToString()))
+            {
+                EquipItem(i);
+                break;
+            }
+        }
+
+
+        //Switch weapon by scrollwheel 
+        if (Input.GetAxisRaw("Mouse ScrollWheel") > 0f)
+        {
+            if (itemIndex >= items.Length - 1)
+            {
+                EquipItem(0);
+            }
+            else
+            {
+                EquipItem(itemIndex + 1);
+            }
+
+        }
+        else if (Input.GetAxisRaw("Mouse ScrollWheel") < 0f)
+        {
+            if (itemIndex <= 0)
+            {
+                EquipItem(items.Length - 1);
+            }
+            else
+            {
+                EquipItem(itemIndex - 1);
+            }
+        }
+    }
+
+    void DetermineAim() 
+    {
+        ((Gun)items[itemIndex]).DetermineAim();
+    }
     void EquipItem(int _index)
     {
         //保证不会重复掏出武器
@@ -207,7 +230,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
         if (changedProps.ContainsKey("itemIndex")&&!PV.IsMine && targetPlayer == PV.Owner)
         {
             EquipItem((int)changedProps["itemIndex"]);
-
         }
         //base.OnPlayerPropertiesUpdate(targetPlayer, changedProps);
     }

@@ -44,4 +44,15 @@ public class SingleShotGun : Gun
             bulletImpactObj.transform.SetParent(colliders[0].transform);
         }
     }
+
+    public override void Reload()
+    {
+        //throw new System.NotImplementedException();
+    }
+
+    public override void DetermineAim()
+    {
+        
+        //throw new System.NotImplementedException();
+    }
 }
