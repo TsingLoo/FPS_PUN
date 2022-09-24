@@ -30,6 +30,8 @@ public class GunController : Gun
     //public Vector3 aimingLocalPosition;
 
     //Weapon Recoil
+
+    [SerializeField] Recoil recoil;
     public bool randomizeRecold;
     public Vector2 randomRecoilConstraints;
 
@@ -44,6 +46,7 @@ public class GunController : Gun
         {
             _canShoot = false;
             _currentAmmoInClip--;
+            recoil.RecoilFire();
             StartCoroutine(ShootGun());
         }
     }
@@ -83,7 +86,7 @@ public class GunController : Gun
 
     IEnumerator ShootGun() 
     {
-        DeterminRecoil();
+        //DeterminRecoil();
         StartCoroutine(MuzzleFlash());
         yield return new WaitForSeconds(fireRate);
         _canShoot = true;
@@ -112,9 +115,12 @@ public class GunController : Gun
 
         //cameraHolder.transform.localEulerAngles = Vector3.left * recoilPattern.y;
     }
+
+
     // Start is called before the first frame update
     void Start()
     {
+
         gunInfo = (GunInfo)itemInfo;
 
         clipSize = gunInfo.clipSize;

@@ -28,6 +28,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
 
     [SerializeField] Item[] items;
 
+    [SerializeField] Recoil recoil;
+
     int itemIndex;
     int previousItemIndex = -1;
 
@@ -187,6 +189,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
             return;
 
         itemIndex = _index;
+        recoil.SetRecoil(((GunInfo)items[itemIndex].itemInfo));
         items[itemIndex].itemGameObject.SetActive(true);
 
         //当前已装备了武器，需要将上一个关闭上一个武器
