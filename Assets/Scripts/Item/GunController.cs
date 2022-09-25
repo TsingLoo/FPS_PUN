@@ -7,6 +7,8 @@ using UnityEngine.UI;
 
 public class GunController : Gun
 {
+    [SerializeField] PlayerController playerController;
+
     public GameObject GunPrefab;
 
     [Header("Gun Settings")]
@@ -47,6 +49,7 @@ public class GunController : Gun
             _canShoot = false;
             _currentAmmoInClip--;
             recoil.RecoilFire();
+            playerController.RefreshAmmoUI(_currentAmmoInClip,_ammoInReserve);
             StartCoroutine(ShootGun());
         }
     }

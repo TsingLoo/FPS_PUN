@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
@@ -17,6 +18,10 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
     [SerializeField] UnityEngine.UI.Image healthbarImage;
     [SerializeField] GameObject ui;
 
+    [SerializeField] TMP_Text currentAmmo;
+    [SerializeField] TMP_Text reversedAmmo;
+
+   
     [SerializeField] GameObject cameraHolder;
 
     [SerializeField] float mouseSensitivity;
@@ -189,7 +194,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
             return;
 
         itemIndex = _index;
-        recoil.SetRecoil(((GunInfo)items[itemIndex].itemInfo));
+        recoil.SetRecoil((GunInfo)items[itemIndex].itemInfo);
         items[itemIndex].itemGameObject.SetActive(true);
 
         //当前已装备了武器，需要将上一个关闭上一个武器
@@ -263,6 +268,13 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
             //找到发送信息者
             PlayerManager.Find(info.Sender).GetKill();
         }
+    }
+
+    public void RefreshAmmoUI(int curr, int reversed)
+    {
+        currentAmmo.text = curr.ToString();
+        reversedAmmo.text = reversed.ToString();
+    
     }
 
     void Die() 

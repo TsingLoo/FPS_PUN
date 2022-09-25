@@ -17,9 +17,9 @@ MonoBehaviour:
   fireRate: 0.25
   clipSize: 25
   normalLocationPosition: {x: 0.339, y: 0.363, z: 0.59}
-  aimingLocalPosition: {x: 0.01, y: 0.395, z: 0.47}
+  aimingLocalPosition: {x: 0.01, y: 0.4, z: 0.496}
   recoilX: -4
   recoilY: 2
-  recoilZ: 0.2
+  recoilZ: 0.05
   snappiness: 6
   returnSpeed: 4
