@@ -39,6 +39,7 @@ public class Launcher : MonoBehaviourPunCallbacks
             return;
         }
         PhotonNetwork.CreateRoom(roomNameInputField.text);
+        Debug.Log("[Network]Trying to create the room");
         MenuManager.Instance.OpenMenu("Loading");
     }
 
