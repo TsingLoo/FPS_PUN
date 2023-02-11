@@ -1,3 +1,4 @@
+using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -35,13 +36,14 @@ public class WallRun : MonoBehaviour
     RaycastHit leftWallHit;
     RaycastHit rightWallHit;
 
-
+    PhotonView PV;
 
     private Rigidbody rb;
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        PV = GetComponent<PhotonView>();
     }
 
 
@@ -63,6 +65,11 @@ public class WallRun : MonoBehaviour
 
     void Update()
     {
+        if (!PV.IsMine)
+        {
+            return;
+        }
+
         CheckWall();
 
         if (true)

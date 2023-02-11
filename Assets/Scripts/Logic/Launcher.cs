@@ -125,7 +125,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     public override void OnRoomListUpdate(List<RoomInfo> roomList)
     {
         //PhotonNetwork.countOfRooms != PhotonNetwork.GetRoomList();
-        Debug.Log("[Network]Room List is Updated: " + roomList.Count() + " in total");
+        Debug.Log("[Network]Room List is Updated: " + roomList.Count() + " in total: " );
          
         //先清理已有的房间列表
         foreach (Transform item in roomListContent)
@@ -133,9 +133,11 @@ public class Launcher : MonoBehaviourPunCallbacks
             Destroy(item.gameObject);
         }
 
-
+        //再实例化房间数据条目
         for (int i = 0; i < roomList.Count(); i++)
         {
+            Debug.Log("[Network]" + roomList[i]);
+
             if (roomList[i].RemovedFromList)
                 continue;
             Instantiate(roomListItemPrefab, roomListContent).GetComponent<RoomListItem>().SetUp(roomList[i]);
